@@ -14,7 +14,7 @@
         
         {% if user == ad.seller %}
         <div class="mb-3">
-            <a href="{% url 'ads:edit' ad.pk %}" class="btn btn-primary">Edit Ad</a>
+            <a href="{% url 'ads:edit' ad.slug %}" class="btn btn-primary">Edit Ad</a>
         </div>
         {% endif %}
         
