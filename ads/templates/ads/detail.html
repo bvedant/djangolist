@@ -12,6 +12,12 @@
         <h1>{{ ad.title }}</h1>
         <p class="lead">${{ ad.price }}</p>
         
+        {% if user == ad.seller %}
+        <div class="mb-3">
+            <a href="{% url 'ads:edit' ad.pk %}" class="btn btn-primary">Edit Advertisement</a>
+        </div>
+        {% endif %}
+        
         <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title">Description</h5>

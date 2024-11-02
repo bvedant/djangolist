@@ -27,8 +27,22 @@ def ad_create(request):
     else:
         form = AdvertisementForm()
     
-    categories = Category.objects.all()
-    return render(request, 'ads/create.html', {
-        'form': form,
-        'categories': categories
-    })
+    return render(request, 'ads/create.html', {'form': form})
+
+@login_required
+def ad_edit(request, pk):
+    advertisement = get_object_or_404(Advertisement, pk=pk)
+    
+    # Check if the user is the seller
+    if request.user != advertisement.seller:
+        return redirect('ads:detail', pk=pk)
+    
+    if request.method == 'POST':
+        form = AdvertisementForm(request.POST, request.FILES, instance=advertisement)
+        if form.is_valid():
+            form.save()
+            return redirect('ads:detail', pk=pk)
+    else:
+        form = AdvertisementForm(instance=advertisement)
+    
+    return render(request, 'ads/edit.html', {'form': form, 'ad': advertisement})
