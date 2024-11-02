@@ -8,35 +8,13 @@
         <h2>Post New Advertisement</h2>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            {% for field in form %}
             <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control" id="title" name="title" required>
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field.errors }}
+                {{ field }}
             </div>
-            
-            <div class="mb-3">
-                <label for="category" class="form-label">Category</label>
-                <select class="form-control" id="category" name="category" required>
-                    {% for category in categories %}
-                    <option value="{{ category.id }}">{{ category.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            
-            <div class="mb-3">
-                <label for="price" class="form-label">Price</label>
-                <input type="number" class="form-control" id="price" name="price" step="0.01" required>
-            </div>
-            
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
-            </div>
-            
-            <div class="mb-3">
-                <label for="image" class="form-label">Image</label>
-                <input type="file" class="form-control" id="image" name="image">
-            </div>
-            
+            {% endfor %}
             <button type="submit" class="btn btn-primary">Post Advertisement</button>
         </form>
     </div>

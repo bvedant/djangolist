@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Advertisement, Category
+from .forms import AdvertisementForm
 
 def ad_list(request):
     ads = Advertisement.objects.filter(is_active=True)
@@ -17,6 +18,17 @@ def ad_detail(request, pk):
 @login_required
 def ad_create(request):
     if request.method == 'POST':
-        # Handle form submission
-        pass
-    return render(request, 'ads/create.html')
+        form = AdvertisementForm(request.POST, request.FILES)
+        if form.is_valid():
+            advertisement = form.save(commit=False)
+            advertisement.seller = request.user
+            advertisement.save()
+            return redirect('ads:detail', pk=advertisement.pk)
+    else:
+        form = AdvertisementForm()
+    
+    categories = Category.objects.all()
+    return render(request, 'ads/create.html', {
+        'form': form,
+        'categories': categories
+    })
