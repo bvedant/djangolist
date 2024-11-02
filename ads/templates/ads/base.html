@@ -19,6 +19,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'ads:create' %}">Submit Ad</a>
                     </li>
+                    {% if user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ads:admin_dashboard' %}">
+                            Admin Dashboard
+                            {% if pending_count > 0 %}
+                            <span class="badge bg-warning">{{ pending_count }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    {% endif %}
                     {% endif %}
                 </ul>
                 <ul class="navbar-nav">

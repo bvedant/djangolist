@@ -8,10 +8,7 @@ from .forms import AdvertisementForm, DeletionRequestForm
 from .auth_forms import UserRegistrationForm
 
 def ad_list(request):
-    if request.user.is_staff:
-        ads = Advertisement.objects.filter(is_active=True)
-    else:
-        ads = Advertisement.objects.filter(is_active=True, status='approved')
+    ads = Advertisement.objects.filter(is_active=True, status='approved')
     categories = Category.objects.all()
     return render(request, 'ads/list.html', {
         'ads': ads,
@@ -156,3 +153,31 @@ def ad_reject(request, slug):
         return redirect('ads:detail', slug=slug)
     
     return render(request, 'ads/reject.html', {'ad': ad})
+
+@login_required
+def admin_dashboard(request):
+    # Redirect non-staff users
+    if not request.user.is_staff:
+        messages.error(request, "You don't have permission to access this page.")
+        return redirect('ads:list')
+    
+    # Get pending ads, ordered by oldest first
+    pending_ads = Advertisement.objects.filter(
+        status='pending',
+        is_active=True
+    ).order_by('created_at')
+    
+    # Get recently rejected ads
+    rejected_ads = Advertisement.objects.filter(
+        status='rejected',
+        is_active=True
+    ).order_by('-updated_at')[:10]  # Limit to 10 most recent
+    
+    context = {
+        'pending_ads': pending_ads,
+        'rejected_ads': rejected_ads,
+        'pending_count': pending_ads.count(),
+        'rejected_count': rejected_ads.count(),
+    }
+    
+    return render(request, 'ads/admin_dashboard.html', context)
