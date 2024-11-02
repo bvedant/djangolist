@@ -20,7 +20,7 @@ class Advertisement(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    image = models.ImageField(upload_to='advertisements/', blank=True, null=True)
+    image = models.ImageField(upload_to='ads/', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     
     def __str__(self):

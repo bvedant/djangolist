@@ -1,0 +1,42 @@
+{% extends 'ads/base.html' %}
+
+{% block title %}Browse Ads - Djangolist{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <h4>Categories</h4>
+        <div class="list-group">
+            {% for category in categories %}
+            <a href="?category={{ category.slug }}" class="list-group-item list-group-item-action">
+                {{ category.name }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        <h2>Latest Advertisements</h2>
+        <div class="row">
+            {% for ad in ads %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    {% if ad.image %}
+                    <img src="{{ ad.image.url }}" class="card-img-top" alt="{{ ad.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ ad.title }}</h5>
+                        <p class="card-text">${{ ad.price }}</p>
+                        <a href="{% url 'ads:detail' ad.pk %}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p>No advertisements found.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
