@@ -1,7 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
+from django.urls import reverse_lazy
 from .models import Advertisement, Category
 from .forms import AdvertisementForm
+from .auth_forms import UserRegistrationForm
 
 def ad_list(request):
     ads = Advertisement.objects.filter(is_active=True)
@@ -46,3 +49,14 @@ def ad_edit(request, slug):
         form = AdvertisementForm(instance=advertisement)
     
     return render(request, 'ads/edit.html', {'form': form, 'ad': advertisement})
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('ads:list')
+    else:
+        form = UserRegistrationForm()
+    return render(request, 'registration/register.html', {'form': form})
