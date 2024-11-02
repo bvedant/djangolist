@@ -1,5 +1,6 @@
 from django import forms
 from .models import Advertisement, Category, DeletionRequest
+from decimal import Decimal
 
 class AdvertisementForm(forms.ModelForm):
     class Meta:
@@ -13,10 +14,16 @@ class AdvertisementForm(forms.ModelForm):
             'image': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+        if price is not None and price <= Decimal('0'):
+            raise forms.ValidationError("Please enter a valid price. Items must be listed for at least $0.01.")
+        return price
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['category'].queryset = Category.objects.all()
-        self.fields['category'].empty_label = None  # This removes the "-----" empty option
+        self.fields['category'].empty_label = None
 
 class DeletionRequestForm(forms.ModelForm):
     class Meta:
