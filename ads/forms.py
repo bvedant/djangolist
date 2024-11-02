@@ -1,5 +1,5 @@
 from django import forms
-from .models import Advertisement, Category
+from .models import Advertisement, Category, DeletionRequest
 
 class AdvertisementForm(forms.ModelForm):
     class Meta:
@@ -17,3 +17,15 @@ class AdvertisementForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['category'].queryset = Category.objects.all()
         self.fields['category'].empty_label = None  # This removes the "-----" empty option
+
+class DeletionRequestForm(forms.ModelForm):
+    class Meta:
+        model = DeletionRequest
+        fields = ['reason']
+        widgets = {
+            'reason': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Please provide a reason for requesting deletion'
+            })
+        }

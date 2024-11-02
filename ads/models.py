@@ -36,3 +36,21 @@ class Advertisement(models.Model):
             uuid_start = str(self.id)[:8]
             self.slug = f"{slugify(self.title)}-{uuid_start}"
         super().save(*args, **kwargs)
+
+class DeletionRequest(models.Model):
+    advertisement = models.ForeignKey(Advertisement, on_delete=models.CASCADE)
+    requested_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    reason = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('pending', 'Pending'),
+            ('approved', 'Approved'),
+            ('rejected', 'Rejected')
+        ],
+        default='pending'
+    )
+
+    def __str__(self):
+        return f"Deletion request for {self.advertisement.title}"
