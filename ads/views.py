@@ -3,9 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .models import Advertisement, Category, DeletionRequest
+from .models import Advertisement, Category, DeletionRequest, Notification
 from .forms import AdvertisementForm, DeletionRequestForm
 from .auth_forms import UserRegistrationForm
+from .services import notify_ad_status_change, notify_staff_new_ad
 
 def ad_list(request):
     ads = Advertisement.objects.filter(is_active=True, status='approved')
@@ -32,6 +33,7 @@ def ad_create(request):
             advertisement.save()
             
             if advertisement.status == 'pending':
+                notify_staff_new_ad(advertisement)
                 messages.success(
                     request,
                     'Thank you! Your ad has been submitted and is pending approval. '
@@ -136,6 +138,7 @@ def ad_approve(request, slug):
     ad = get_object_or_404(Advertisement, slug=slug)
     ad.status = 'approved'
     ad.save()
+    notify_ad_status_change(ad, 'approved')
     messages.success(request, 'Advertisement has been approved.')
     return redirect('ads:detail', slug=slug)
 
@@ -149,6 +152,7 @@ def ad_reject(request, slug):
         ad.status = 'rejected'
         ad.rejection_reason = request.POST.get('reason', '')
         ad.save()
+        notify_ad_status_change(ad, 'rejected')
         messages.success(request, 'Advertisement has been rejected.')
         return redirect('ads:detail', slug=slug)
     
@@ -181,3 +185,18 @@ def admin_dashboard(request):
     }
     
     return render(request, 'ads/admin_dashboard.html', context)
+
+@login_required
+def notifications(request):
+    notifications = Notification.objects.filter(user=request.user)
+    unread = notifications.filter(read=False)
+    
+    # Mark all as read
+    if request.method == 'POST':
+        unread.update(read=True)
+        return redirect('ads:notifications')
+    
+    return render(request, 'ads/notifications.html', {
+        'notifications': notifications[:20],  # Show last 20 notifications
+        'unread_count': unread.count()
+    })

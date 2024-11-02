@@ -13,4 +13,5 @@ urlpatterns = [
     path('post/<slug:slug>/approve/', views.ad_approve, name='approve'),
     path('post/<slug:slug>/reject/', views.ad_reject, name='reject'),
     path('moderation/', views.admin_dashboard, name='admin_dashboard'),
+    path('notifications/', views.notifications, name='notifications'),
 ]

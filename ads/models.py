@@ -70,3 +70,31 @@ class DeletionRequest(models.Model):
 
     def __str__(self):
         return f"Deletion request for {self.advertisement.title}"
+
+class Notification(models.Model):
+    NOTIFICATION_TYPES = [
+        ('ad_approved', 'Ad Approved'),
+        ('ad_rejected', 'Ad Rejected'),
+        ('deletion_approved', 'Deletion Request Approved'),
+        ('deletion_rejected', 'Deletion Request Rejected'),
+        ('needs_moderation', 'Needs Moderation'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    notification_type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
+    title = models.CharField(max_length=255)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+    related_ad = models.ForeignKey(
+        'Advertisement', 
+        on_delete=models.CASCADE, 
+        null=True, 
+        blank=True
+    )
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.get_notification_type_display()} for {self.user.username}"
