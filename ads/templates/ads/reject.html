@@ -1,0 +1,23 @@
+{% extends 'ads/base.html' %}
+
+{% block title %}Reject Advertisement - Djangolist{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h2>Reject Advertisement</h2>
+        <div class="alert alert-info">
+            Rejecting: <strong>{{ ad.title }}</strong>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="reason" class="form-label">Rejection Reason</label>
+                <textarea name="reason" id="reason" class="form-control" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-danger">Reject Advertisement</button>
+            <a href="{% url 'ads:detail' ad.slug %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %} 

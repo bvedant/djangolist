@@ -10,4 +10,6 @@ urlpatterns = [
     path('post/<slug:slug>/edit/', views.ad_edit, name='edit'),
     path('post/<slug:slug>/request-deletion/', views.request_deletion, name='request_deletion'),
     path('post/<slug:slug>/delete/', views.ad_delete, name='delete'),
+    path('post/<slug:slug>/approve/', views.ad_approve, name='approve'),
+    path('post/<slug:slug>/reject/', views.ad_reject, name='reject'),
 ]

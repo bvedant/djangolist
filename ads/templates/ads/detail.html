@@ -12,10 +12,26 @@
         <h1>{{ ad.title }}</h1>
         <p class="lead">${{ ad.price }}</p>
         
+        {% if ad.status != 'approved' %}
+            <div class="alert alert-warning">
+                Status: {{ ad.get_status_display }}
+                {% if ad.rejection_reason %}
+                    <br>Reason: {{ ad.rejection_reason }}
+                {% endif %}
+            </div>
+        {% endif %}
+
         {% if user.is_authenticated %}
             <div class="mb-3">
                 {% if user.is_staff %}
-                    <!-- Admin can delete directly -->
+                    {% if ad.status == 'pending' %}
+                        <form method="post" action="{% url 'ads:approve' ad.slug %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">Approve</button>
+                        </form>
+                        <a href="{% url 'ads:reject' ad.slug %}" class="btn btn-danger">Reject</a>
+                    {% endif %}
+                    <!-- Admin delete button -->
                     <form method="post" action="{% url 'ads:delete' ad.slug %}" class="d-inline" 
                           onsubmit="return confirm('Are you sure you want to delete this ad?');">
                         {% csrf_token %}

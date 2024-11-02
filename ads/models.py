@@ -15,6 +15,12 @@ class Category(models.Model):
         return self.name
 
 class Advertisement(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending Approval'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected')
+    ]
+    
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -26,15 +32,25 @@ class Advertisement(models.Model):
     image = models.ImageField(upload_to='ads/', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending'
+    )
+    rejection_reason = models.TextField(blank=True, null=True)
     
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            # Create a slug from the title and add the first 8 chars of UUID
             uuid_start = str(self.id)[:8]
             self.slug = f"{slugify(self.title)}-{uuid_start}"
+        
+        # Auto-approve ads created by staff members
+        if self.seller.is_staff and self.status == 'pending':
+            self.status = 'approved'
+            
         super().save(*args, **kwargs)
 
 class DeletionRequest(models.Model):

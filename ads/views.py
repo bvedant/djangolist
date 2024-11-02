@@ -8,7 +8,10 @@ from .forms import AdvertisementForm, DeletionRequestForm
 from .auth_forms import UserRegistrationForm
 
 def ad_list(request):
-    ads = Advertisement.objects.filter(is_active=True)
+    if request.user.is_staff:
+        ads = Advertisement.objects.filter(is_active=True)
+    else:
+        ads = Advertisement.objects.filter(is_active=True, status='approved')
     categories = Category.objects.all()
     return render(request, 'ads/list.html', {
         'ads': ads,
@@ -26,7 +29,19 @@ def ad_create(request):
         if form.is_valid():
             advertisement = form.save(commit=False)
             advertisement.seller = request.user
+            # Set initial status
+            if request.user.is_staff:
+                advertisement.status = 'approved'
             advertisement.save()
+            
+            if advertisement.status == 'pending':
+                messages.success(
+                    request,
+                    'Thank you! Your ad has been submitted and is pending approval. '
+                    'Please check back later to see if it has been approved.'
+                )
+            else:
+                messages.success(request, 'Your ad has been posted successfully.')
             return redirect('ads:detail', slug=advertisement.slug)
     else:
         form = AdvertisementForm()
@@ -115,3 +130,29 @@ def ad_delete(request, slug):
         return redirect('ads:list')
     
     return redirect('ads:detail', slug=slug)
+
+@login_required
+def ad_approve(request, slug):
+    if not request.user.is_staff:
+        return redirect('ads:list')
+        
+    ad = get_object_or_404(Advertisement, slug=slug)
+    ad.status = 'approved'
+    ad.save()
+    messages.success(request, 'Advertisement has been approved.')
+    return redirect('ads:detail', slug=slug)
+
+@login_required
+def ad_reject(request, slug):
+    if not request.user.is_staff:
+        return redirect('ads:list')
+        
+    ad = get_object_or_404(Advertisement, slug=slug)
+    if request.method == 'POST':
+        ad.status = 'rejected'
+        ad.rejection_reason = request.POST.get('reason', '')
+        ad.save()
+        messages.success(request, 'Advertisement has been rejected.')
+        return redirect('ads:detail', slug=slug)
+    
+    return render(request, 'ads/reject.html', {'ad': ad})
