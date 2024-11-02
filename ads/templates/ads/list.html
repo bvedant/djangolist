@@ -27,7 +27,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ ad.title }}</h5>
                         <p class="card-text">${{ ad.price }}</p>
-                        <a href="{% url 'ads:detail' ad.pk %}" class="btn btn-primary">View Details</a>
+                        <a href="{% url 'ads:detail' ad.slug %}" class="btn btn-primary">View Details</a>
                     </div>
                 </div>
             </div>
