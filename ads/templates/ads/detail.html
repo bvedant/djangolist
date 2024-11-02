@@ -14,7 +14,7 @@
         
         {% if user == ad.seller %}
         <div class="mb-3">
-            <a href="{% url 'ads:edit' ad.pk %}" class="btn btn-primary">Edit Advertisement</a>
+            <a href="{% url 'ads:edit' ad.pk %}" class="btn btn-primary">Edit Ad</a>
         </div>
         {% endif %}
         
@@ -29,7 +29,7 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Seller Information</h5>
+                <h5 class="card-title">Seller Info</h5>
                 <p class="card-text">{{ ad.seller.username }}</p>
                 <p class="card-text"><small class="text-muted">Posted on {{ ad.created_at|date }}</small></p>
                 <p class="card-text">Category: {{ ad.category.name }}</p>
