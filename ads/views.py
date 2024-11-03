@@ -9,11 +9,31 @@ from .auth_forms import UserRegistrationForm
 from .services import notify_ad_status_change, notify_staff_new_ad
 
 def ad_list(request):
+    # Base queryset
     ads = Advertisement.objects.filter(is_active=True, status='approved')
+    
+    # Category filtering
+    category_slug = request.GET.get('category')
+    if category_slug:
+        ads = ads.filter(category__slug=category_slug)
+    
+    # Sorting
+    sort = request.GET.get('sort', 'newest')
+    if sort == 'newest':
+        ads = ads.order_by('-created_at')
+    elif sort == 'price_low':
+        ads = ads.order_by('price')
+    elif sort == 'price_high':
+        ads = ads.order_by('-price')
+    
+    # Get all categories for the sidebar
     categories = Category.objects.all()
+    total_ads = Advertisement.objects.filter(is_active=True, status='approved').count()
+    
     return render(request, 'ads/list.html', {
         'ads': ads,
-        'categories': categories
+        'categories': categories,
+        'total_ads': total_ads,
     })
 
 def ad_detail(request, slug):

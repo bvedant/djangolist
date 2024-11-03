@@ -3,62 +3,87 @@
 {% block title %}Browse Ads - Djangolist{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-3">
-        <div class="card mb-4">
-            <div class="card-header bg-light">
-                <h4 class="card-title h5 mb-0">Categories</h4>
+<div class="container mt-4">
+    <!-- Filter Bar -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex gap-2">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Price Range
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">All Prices</a></li>
+                    <li><a class="dropdown-item" href="#">Under $50</a></li>
+                    <li><a class="dropdown-item" href="#">$50 - $200</a></li>
+                    <li><a class="dropdown-item" href="#">$200 - $1000</a></li>
+                    <li><a class="dropdown-item" href="#">Over $1000</a></li>
+                </ul>
             </div>
-            <div class="list-group list-group-flush">
-                <a href="{% url 'ads:list' %}" class="list-group-item list-group-item-action {% if not request.GET.category %}active{% endif %}">
-                    All Categories
-                </a>
-                {% for category in categories %}
-                <a href="?category={{ category.slug }}" 
-                   class="list-group-item list-group-item-action {% if request.GET.category == category.slug %}active{% endif %}">
-                    {{ category.name }}
-                </a>
-                {% endfor %}
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Category
+                </button>
+                <ul class="dropdown-menu">
+                    {% for category in categories %}
+                    <li><a class="dropdown-item" href="?category={{ category.slug }}">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
             </div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="?sort=newest" class="btn btn-outline-secondary {% if request.GET.sort == 'newest' %}active{% endif %}">
+                Newly listed
+            </a>
+            <a href="?sort=price_low" class="btn btn-outline-secondary {% if request.GET.sort == 'price_low' %}active{% endif %}">
+                Price: Low to High
+            </a>
+            <a href="?sort=price_high" class="btn btn-outline-secondary {% if request.GET.sort == 'price_high' %}active{% endif %}">
+                Price: High to Low
+            </a>
         </div>
     </div>
-    
-    <div class="col-md-9">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Latest Ads</h2>
-        </div>
 
-        <div class="row g-4">
-            {% for ad in ads %}
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 shadow-sm">
-                    {% if ad.image %}
-                    <img src="{{ ad.image.url }}" class="card-img-top" alt="{{ ad.title }}" style="height: 200px; object-fit: cover;">
-                    {% else %}
-                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                        <i class="bi bi-image text-muted" style="font-size: 4rem;"></i>
+    <!-- Ads Grid -->
+    <div class="row g-4">
+        {% for ad in ads %}
+        <div class="col-md-3 mb-4">
+            <a href="{% url 'ads:detail' ad.slug %}" class="text-decoration-none">
+                {% if ad.image %}
+                <div class="position-relative mb-2">
+                    <img src="{{ ad.image.url }}" class="w-100 rounded" alt="{{ ad.title }}" 
+                         style="height: 200px; object-fit: cover;">
+                    <div class="position-absolute bottom-0 start-0 w-100 p-2"
+                         style="background: rgba(0,0,0,0.7);">
+                        <div class="text-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>${{ ad.price }}</div>
+                                <div style="font-size: 0.875rem;">{{ ad.created_at|timesince }} ago</div>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                {% endif %}
+                
+                <h3 class="h5 mb-1 title-link">{{ ad.title }}</h3>
+                
+                <div class="mb-2">
+                    {% if ad.created_at|timesince < '24 hours' %}
+                    <span class="badge bg-primary">NEWLY LISTED</span>
                     {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title text-truncate">{{ ad.title }}</h5>
-                        <p class="card-text text-primary fw-bold">${{ ad.price }}</p>
-                        <p class="card-text text-muted small mb-0">
-                            <i class="bi bi-tag"></i> {{ ad.category.name }}
-                        </p>
-                    </div>
-                    <div class="card-footer bg-white border-top-0">
-                        <a href="{% url 'ads:detail' ad.slug %}" class="btn btn-outline-primary w-100">View Details</a>
-                    </div>
                 </div>
-            </div>
-            {% empty %}
-            <div class="col-12">
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle me-2"></i> No ads found in this category.
-                </div>
-            </div>
-            {% endfor %}
+                
+                <p class="description mb-1">{{ ad.description|truncatechars:60 }}</p>
+                
+                <p class="location mb-0">
+                    {{ ad.seller.username }}
+                </p>
+            </a>
         </div>
+        {% endfor %}
     </div>
 </div>
+
+<!-- Add Bootstrap JS and Popper.js for dropdowns -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 {% endblock %}
