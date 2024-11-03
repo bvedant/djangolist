@@ -47,36 +47,28 @@
     <div class="row g-4">
         {% for ad in ads %}
         <div class="col-md-3 mb-4">
-            <a href="{% url 'ads:detail' ad.slug %}" class="text-decoration-none">
+            <a href="{% url 'ads:detail' ad.slug %}" class="listing-link">
                 {% if ad.image %}
                 <div class="position-relative mb-2">
-                    <img src="{{ ad.image.url }}" class="w-100 rounded" alt="{{ ad.title }}" 
-                         style="height: 200px; object-fit: cover;">
-                    <div class="position-absolute bottom-0 start-0 w-100 p-2"
-                         style="background: rgba(0,0,0,0.7);">
-                        <div class="text-white">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>${{ ad.price }}</div>
-                                <div style="font-size: 0.875rem;">{{ ad.created_at|timesince }} ago</div>
-                            </div>
+                    <img src="{{ ad.image.url }}" class="listing-image" alt="{{ ad.title }}">
+                    <div class="listing-overlay">
+                        <div class="listing-price">
+                            <div>${{ ad.price }}</div>
+                            <div>{{ ad.created_at|timesince }} ago</div>
                         </div>
                     </div>
                 </div>
                 {% endif %}
                 
-                <h3 class="h5 mb-1 title-link">{{ ad.title }}</h3>
+                <h3 class="listing-title">{{ ad.title }}</h3>
                 
-                <div class="mb-2">
-                    {% if ad.created_at|timesince < '24 hours' %}
-                    <span class="badge bg-primary">NEWLY LISTED</span>
-                    {% endif %}
-                </div>
+                {% if ad.created_at|timesince < '24 hours' %}
+                <span class="listing-badge">NEWLY LISTED</span>
+                {% endif %}
                 
-                <p class="description mb-1">{{ ad.description|truncatechars:60 }}</p>
+                <p class="listing-description">{{ ad.description|truncatechars:60 }}</p>
                 
-                <p class="location mb-0">
-                    {{ ad.seller.username }}
-                </p>
+                <p class="listing-location">{{ ad.seller.username }}</p>
             </a>
         </div>
         {% endfor %}
