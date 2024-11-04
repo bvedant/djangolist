@@ -1,4 +1,5 @@
 {% extends 'ads/base.html' %}
+{% load humanize %}
 
 {% block title %}Browse Ads - Djangolist{% endblock %}
 
@@ -51,10 +52,9 @@
                 {% if ad.image %}
                 <div class="position-relative mb-2">
                     <img src="{{ ad.image.url }}" class="listing-image" alt="{{ ad.title }}">
-                    <div class="listing-overlay">
-                        <div class="listing-price">
-                            <div>${{ ad.price }}</div>
-                            <div>{{ ad.created_at|timesince }} ago</div>
+                    <div class="price-tag">
+                        <div class="price-content">
+                            <span class="currency">$</span><span class="value">{{ ad.formatted_price }}</span>
                         </div>
                     </div>
                 </div>
@@ -62,13 +62,16 @@
                 
                 <h3 class="listing-title">{{ ad.title }}</h3>
                 
-                {% if ad.created_at|timesince < '24 hours' %}
-                <span class="listing-badge">NEWLY LISTED</span>
-                {% endif %}
+                <div>
+                    {% if ad.created_at|timesince < '24 hours' %}
+                    <span class="listing-badge">NEW</span>
+                    {% endif %}
+                    <p class="listing-description">{{ ad.description|truncatechars:60 }}</p>
+                </div>
                 
-                <p class="listing-description">{{ ad.description|truncatechars:60 }}</p>
-                
-                <p class="listing-location">{{ ad.seller.username }}</p>
+                <p class="listing-location">
+                    {{ ad.location }}
+                </p>
             </a>
         </div>
         {% endfor %}

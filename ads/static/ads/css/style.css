@@ -47,27 +47,34 @@
 
 /* Listing cards */
 .listing-image {
-    height: 200px;
+    height: 160px;
     object-fit: cover;
-    border-radius: 6px;
+    border-radius: 4px;
     width: 100%;
 }
 
 .listing-overlay {
-    background: rgba(0, 0, 0, 0.7);
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100%;
-    padding: 0.5rem;
+    right: 0;
+    padding: 1rem;
+    background: none;
 }
 
 .listing-price {
-    color: white;
-    font-size: 0.9rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
+}
+
+.price-bubble {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 .listing-title {
@@ -83,6 +90,7 @@
     font-size: 0.9rem;
     line-height: 1.4;
     margin-bottom: 0.5rem;
+    display: inline;
 }
 
 .listing-location {
@@ -93,13 +101,13 @@
 .listing-badge {
     font-size: 0.7rem;
     font-weight: 600;
-    padding: 0.35em 0.65em;
-    letter-spacing: 0.03em;
+    padding: 0.25em 0.75em;
+    letter-spacing: 0.05em;
     border-radius: 3px;
-    background-color: var(--color-accent);
+    background-color: #FF4D4D;
     color: white;
     text-transform: uppercase;
-    margin-bottom: 0.5rem;
+    margin-right: 0.5rem;
     display: inline-block;
 }
 
@@ -129,4 +137,27 @@
 
 .listing-link {
     text-decoration: none;
+}
+
+.price-tag {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+}
+
+.price-content {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+}
+
+.price-content .currency,
+.price-content .value {
+    color: white;
 } 

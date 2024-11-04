@@ -38,6 +38,7 @@ class Advertisement(models.Model):
         default='pending'
     )
     rejection_reason = models.TextField(blank=True, null=True)
+    location = models.CharField(max_length=100, blank=True)
     
     def __str__(self):
         return self.title
@@ -52,6 +53,11 @@ class Advertisement(models.Model):
             self.status = 'approved'
             
         super().save(*args, **kwargs)
+
+    @property
+    def formatted_price(self):
+        from django.contrib.humanize.templatetags.humanize import intcomma
+        return intcomma(int(self.price))
 
 class DeletionRequest(models.Model):
     advertisement = models.ForeignKey(Advertisement, on_delete=models.CASCADE)
