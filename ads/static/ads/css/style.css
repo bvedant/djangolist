@@ -160,4 +160,83 @@
 .price-content .currency,
 .price-content .value {
     color: white;
+}
+
+/* Form styling */
+.form-control {
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+}
+
+.form-control:focus {
+    background: white;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 0.2rem rgba(74, 74, 74, 0.15);
+}
+
+.card {
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+}
+
+.card-title {
+    color: var(--color-text-primary);
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: var(--color-accent);
+    border: none;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    background: #333333;
+}
+
+.btn-outline-secondary {
+    border-color: var(--color-border);
+    color: var(--color-text-secondary);
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+}
+
+.alert {
+    border: none;
+    border-radius: 6px;
+}
+
+.form-text {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* Auth forms */
+.btn-link {
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+.alert-danger {
+    background-color: #fff2f2;
+    border-color: #ffebeb;
+    color: #dc3545;
+}
+
+.card.shadow-sm {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
 } 

@@ -24,7 +24,10 @@
                             <a href="{% url 'ads:admin_dashboard' %}" class="nav-link me-3">Dashboard</a>
                         {% endif %}
                         <a href="{% url 'ads:notifications' %}" class="nav-link me-3">Notifications</a>
-                        <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+                        <form method="post" action="{% url 'logout' %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link border-0 bg-transparent">Logout</button>
+                        </form>
                     {% else %}
                         <a href="{% url 'login' %}" class="nav-link me-3">Login</a>
                         <a href="{% url 'register' %}" class="btn-post-ad">Sign Up</a>
