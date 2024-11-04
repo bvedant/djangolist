@@ -81,34 +81,37 @@
     color: var(--color-text-primary);
     font-size: 1.1rem;
     font-weight: 600;
-    line-height: 1.2;
-    margin-bottom: 0.25rem;
+    line-height: 1.1;
+    margin-bottom: 0;
 }
 
 .listing-description {
     color: var(--color-text-secondary);
     font-size: 0.9rem;
-    line-height: 1.4;
-    margin-bottom: 0.5rem;
+    line-height: 1.1;
     display: inline;
 }
 
 .listing-location {
     color: var(--color-text-muted);
     font-size: 0.875rem;
+    line-height: 1.1;
+    margin-top: 0.1rem;
 }
 
 .listing-badge {
-    font-size: 0.7rem;
+    display: inline-block;
+    font-size: 0.65rem;
     font-weight: 600;
-    padding: 0.25em 0.75em;
-    letter-spacing: 0.05em;
-    border-radius: 3px;
+    padding: 0.35em 0.45em;
+    letter-spacing: 0.03em;
+    border-radius: 2px;
     background-color: #FF4D4D;
     color: white;
     text-transform: uppercase;
-    margin-right: 0.5rem;
-    display: inline-block;
+    margin-right: 0.2rem;
+    vertical-align: 1px;
+    line-height: 1;
 }
 
 /* Filter buttons */
@@ -298,4 +301,10 @@
 
 .btn-group .btn-sm {
     padding: 0.25rem 0.75rem;
-} 
+}
+
+.description-line {
+    display: block;
+    margin-top: 0.1rem;
+    line-height: 1.1;
+}

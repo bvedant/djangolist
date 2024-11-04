@@ -23,16 +23,16 @@
                 
                 <h3 class="listing-title">{{ ad.title }}</h3>
                 
-                <div>
-                    {% if ad.created_at|timesince < '24 hours' %}
+                <div class="description-line">
+                    {% if ad.is_new %}
                     <span class="listing-badge">NEW</span>
                     {% endif %}
-                    <p class="listing-description">{{ ad.description|truncatechars:60 }}</p>
+                    <span class="listing-description">{{ ad.description|truncatechars:60 }}</span>
                 </div>
                 
-                <p class="listing-location">
+                <div class="listing-location">
                     {{ ad.location }}
-                </p>
+                </div>
             </a>
         </div>
         {% endfor %}

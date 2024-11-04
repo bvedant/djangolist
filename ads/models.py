@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 import uuid
+from django.utils import timezone
+from datetime import timedelta
 
 
 class Category(models.Model):
@@ -58,6 +60,9 @@ class Advertisement(models.Model):
     def formatted_price(self):
         from django.contrib.humanize.templatetags.humanize import intcomma
         return intcomma(int(self.price))
+
+    def is_new(self):
+        return (timezone.now() - self.created_at) < timedelta(hours=24)
 
 class DeletionRequest(models.Model):
     advertisement = models.ForeignKey(Advertisement, on_delete=models.CASCADE)
