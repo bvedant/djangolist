@@ -6,25 +6,39 @@
 <div class="container mt-4">
     <div class="row mb-4">
         <div class="col">
-            <h2>Admin Dashboard</h2>
+            <h2 class="h3 mb-4">Admin Dashboard</h2>
         </div>
     </div>
 
     <!-- Stats Overview -->
     <div class="row mb-4">
         <div class="col-md-6">
-            <div class="card bg-warning text-dark">
-                <div class="card-body">
-                    <h5 class="card-title">Pending Approval</h5>
-                    <p class="card-text display-4">{{ pending_count }}</p>
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon bg-warning">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="stats-label">Pending Approval</h6>
+                            <h3 class="stats-value mb-0">{{ pending_count }}</h3>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card bg-danger text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Recently Rejected</h5>
-                    <p class="card-text display-4">{{ rejected_count }}</p>
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon bg-danger">
+                            <i class="bi bi-x-circle"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="stats-label">Recently Rejected</h6>
+                            <h3 class="stats-value mb-0">{{ rejected_count }}</h3>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -33,15 +47,18 @@
     <!-- Pending Ads Section -->
     <div class="row mb-4">
         <div class="col">
-            <div class="card">
-                <div class="card-header bg-warning">
-                    <h3 class="card-title h5 mb-0">Pending Ads</h3>
+            <div class="card shadow-sm">
+                <div class="card-header border-0 bg-white pt-4 pb-3 px-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="card-title h5 mb-0">Pending Ads</h3>
+                        <span class="badge bg-warning text-dark">{{ pending_count }} pending</span>
+                    </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     {% if pending_ads %}
                         <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
                                     <tr>
                                         <th>Title</th>
                                         <th>Category</th>
@@ -54,19 +71,21 @@
                                     {% for ad in pending_ads %}
                                     <tr>
                                         <td>
-                                            <a href="{% url 'ads:detail' ad.slug %}" target="_blank">
+                                            <a href="{% url 'ads:detail' ad.slug %}" target="_blank" class="text-decoration-none">
                                                 {{ ad.title }}
                                             </a>
                                         </td>
-                                        <td>{{ ad.category.name }}</td>
+                                        <td><span class="badge bg-light text-dark">{{ ad.category.name }}</span></td>
                                         <td>{{ ad.seller.username }}</td>
                                         <td>{{ ad.created_at|date:"M d, Y H:i" }}</td>
                                         <td>
-                                            <form method="post" action="{% url 'ads:approve' ad.slug %}" class="d-inline">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
-                                            </form>
-                                            <a href="{% url 'ads:reject' ad.slug %}" class="btn btn-danger btn-sm">Reject</a>
+                                            <div class="btn-group">
+                                                <form method="post" action="{% url 'ads:approve' ad.slug %}" class="d-inline">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-success btn-sm me-2">Approve</button>
+                                                </form>
+                                                <a href="{% url 'ads:reject' ad.slug %}" class="btn btn-outline-danger btn-sm">Reject</a>
+                                            </div>
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -84,15 +103,18 @@
     <!-- Recently Rejected Ads Section -->
     <div class="row">
         <div class="col">
-            <div class="card">
-                <div class="card-header bg-danger text-white">
-                    <h3 class="card-title h5 mb-0">Recently Rejected Ads</h3>
+            <div class="card shadow-sm">
+                <div class="card-header border-0 bg-white pt-4 pb-3 px-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="card-title h5 mb-0">Recently Rejected Ads</h3>
+                        <span class="badge bg-danger">{{ rejected_count }} rejected</span>
+                    </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     {% if rejected_ads %}
                         <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
                                     <tr>
                                         <th>Title</th>
                                         <th>Category</th>
@@ -106,24 +128,26 @@
                                     {% for ad in rejected_ads %}
                                     <tr>
                                         <td>
-                                            <a href="{% url 'ads:detail' ad.slug %}" target="_blank">
+                                            <a href="{% url 'ads:detail' ad.slug %}" target="_blank" class="text-decoration-none">
                                                 {{ ad.title }}
                                             </a>
                                         </td>
-                                        <td>{{ ad.category.name }}</td>
+                                        <td><span class="badge bg-light text-dark">{{ ad.category.name }}</span></td>
                                         <td>{{ ad.seller.username }}</td>
                                         <td>{{ ad.updated_at|date:"M d, Y H:i" }}</td>
-                                        <td>{{ ad.rejection_reason|truncatechars:50 }}</td>
+                                        <td><small class="text-muted">{{ ad.rejection_reason|truncatechars:50 }}</small></td>
                                         <td>
-                                            <form method="post" action="{% url 'ads:approve' ad.slug %}" class="d-inline">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
-                                            </form>
-                                            <form method="post" action="{% url 'ads:delete' ad.slug %}" class="d-inline" 
-                                                  onsubmit="return confirm('Are you sure you want to delete this ad?');">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                            </form>
+                                            <div class="btn-group">
+                                                <form method="post" action="{% url 'ads:approve' ad.slug %}" class="d-inline">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-success btn-sm me-2">Approve</button>
+                                                </form>
+                                                <form method="post" action="{% url 'ads:delete' ad.slug %}" class="d-inline" 
+                                                      onsubmit="return confirm('Are you sure you want to delete this ad?');">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                     {% endfor %}
